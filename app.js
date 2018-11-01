@@ -12,6 +12,7 @@ let model = (function() {
         add: function(value) {
             let todo, id;
 
+
             if(data.length > 0) {
                 id = data[data.length-1].id + 1;
             } else {
@@ -95,7 +96,11 @@ let view = (function() {
             renderItem = document.querySelector(container);
 
             dataArr.forEach(function (item) {
-                html += `<li id="${item.id}" class="todo-list__item">${item.value}<span class="close"></span></li>`;
+                if(item.status === true) {
+                    html += `<li id="${item.id}" class="todo-list__item checked">${item.value}<span class="close"></span></li>`;
+                } else {
+                    html += `<li id="${item.id}" class="todo-list__item">${item.value}<span class="close"></span></li>`;
+                }
             });
             renderItem.insertAdjacentHTML('beforeend', html);
 
@@ -205,7 +210,7 @@ let controller = (function(DATA, UI) {
             //2. Check item in UI
             UI.toggleItem(element);
 
-            if(status.toString() === '2') {
+            if(status.toString() === '2' || status.toString() === '1') {
                 UI.deleteItem(element);
             }
 
