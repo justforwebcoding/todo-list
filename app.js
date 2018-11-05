@@ -7,6 +7,14 @@ let model = (function() {
 
     let data = [];
 
+    function renderAll() {
+        data.filter(function (item) {
+            return item;
+        });
+        return data;
+    }
+
+
 
     return {
         add: function(value) {
@@ -44,12 +52,20 @@ let model = (function() {
             this.testing();
         },
 
+        completedArray: function() {
+            let resultData = [];
+            resultData = data.filter(function (item) {
+                if(item.status) {
+                    return item;
+                }
+            });
+            return resultData;
+        },
+
         render: function(value) {
             let resultData = [];
             if(value === '0') {
-                resultData = data.filter(function (item) {
-                    return item;
-                });
+                resultData = renderAll();
             } else if (value === '1') {
                 resultData = data.filter(function (item) {
                     if(!item.status) {
@@ -80,7 +96,8 @@ let view = (function() {
         addBtn: '.todo-btn',
         inputBtn: '.todo-text',
         todoList: '.todo-list',
-        buttonList: '.buttons'
+        buttonList: '.buttons',
+        deleteCompletedBtn: '.del'
     };
 
 
@@ -161,6 +178,8 @@ let controller = (function(DATA, UI) {
         document.querySelector(DOM.todoList).addEventListener('click', checkItem);
 
         document.querySelector(DOM.buttonList).addEventListener('click', renderBtn);
+
+        document.querySelector(DOM.deleteCompletedBtn).addEventListener('click', deleteCompleted);
     };
 
     let fullAddItem = function() {
@@ -216,6 +235,23 @@ let controller = (function(DATA, UI) {
 
         }
 
+
+    };
+
+    let deleteCompleted = function() {
+        let delArr, tempItem;
+
+        //1. Choose completed items
+        delArr = DATA.completedArray();
+
+
+        delArr.forEach(function (item) {
+            //1. Delete completed item from data
+            DATA.delete(item.id);
+            //2. Delete completed item from UI
+            tempItem = document.getElementById(item.id);
+            UI.deleteItem(tempItem);
+        });
 
     };
 
